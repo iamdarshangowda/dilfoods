@@ -1,9 +1,21 @@
+'use client';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 const SingleProduct = () => {
+  const router = useRouter();
+  function handleBack() {
+    router.back();
+  }
+
   return (
     <div class="py-8">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mb-6" onClick={handleBack}>
+          <button class="max-w-sm bg-gray-900 dark:bg-gray-600 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 dark:hover:bg-gray-700">
+            Back
+          </button>
+        </div>
         <div class="flex flex-col md:flex-row -mx-4">
           <div class="md:flex-1 px-4">
             <div class="h-[460px] rounded-lg bg-gray-300 dark:bg-gray-700 mb-4">

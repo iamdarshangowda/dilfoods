@@ -2,10 +2,10 @@ import React from 'react';
 
 const Filter = () => {
   return (
-    <div className="flex gap-4 items-center">
+    <div className="flex gap-4 items-center flex-wrap">
       <input
         type="text"
-        className="py-2 px-4 outline-none text-body-1/b3 text-grey-2 rounded-full"
+        className="py-2 px-4 outline-none text-body-1/b3 text-grey-2 rounded-full max-w-sm w-full"
         placeholder="search your products..."
       />
 
