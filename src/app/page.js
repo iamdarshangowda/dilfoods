@@ -14,8 +14,8 @@ export default function Home() {
         className="mt-10 grid grid-cols-1 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 
         justify-items-center justify-center gap-4"
       >
-        {products.map((product) => (
-          <Link href="/product/1">
+        {products.map((product, index) => (
+          <Link href="/product/1" key={index}>
             <ItemCard />
           </Link>
         ))}
