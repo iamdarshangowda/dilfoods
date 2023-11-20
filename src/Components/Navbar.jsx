@@ -14,9 +14,9 @@ const Navbar = () => {
           Dil Foods
         </h1>
       </Link>
-      <div>
+      <Link href="/checkout">
         <CartIcon />
-      </div>
+      </Link>
     </nav>
   );
 };
