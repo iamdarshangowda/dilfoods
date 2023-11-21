@@ -11,10 +11,11 @@
 }
 
 body {
-  height: 100vh;
   @apply scroll-smooth;
 
   background-image: linear-gradient(#fa9884, #f2b6a0);
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .logo {
