@@ -39,13 +39,14 @@ const SingleProduct = () => {
   }, [pathname]);
 
   useEffect(() => {
-    if (cart.length) {
-      let findProd = cart.findIndex((product) => product.id == singleProduct.id);
-      if (findProd !== -1) {
+    if (singleProduct.id && cart.length) {
+      let findProd = cart.find((product) => product.id == singleProduct.id);
+      if (findProd) {
         setIsAdded(true);
+        setProductSpec({ size: findProd.size, color: findProd.color });
       }
     }
-  }, [cart]);
+  }, [singleProduct, cart]);
 
   function handleAddToCart() {
     if (!productSpec.color || !productSpec.size) {
@@ -55,15 +56,16 @@ const SingleProduct = () => {
 
     cartDispatch({
       type: 'ADD-TO-CART',
-      payload: singleProduct,
+      payload: { ...singleProduct, ...productSpec },
       cartUpdate: {},
     });
   }
 
   const handleRemovefromCart = () => {
+    setIsAdded(false);
     cartDispatch({
       type: 'REMOVE-FROM-CART',
-      payload: singleProduct.id,
+      payload: singleProduct,
     });
   };
 
@@ -115,7 +117,6 @@ const SingleProduct = () => {
                 <div className="w-full px-2">
                   <button
                     onClick={handleRemovefromCart}
-                    disabled={isAdded}
                     className="w-full bg-gray-900 dark:bg-gray-600 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 dark:hover:bg-gray-700"
                   >
                     Remove from cart
@@ -125,7 +126,6 @@ const SingleProduct = () => {
                 <div className="w-full px-2">
                   <button
                     onClick={handleAddToCart}
-                    disabled={isAdded}
                     className="w-full bg-gray-900 dark:bg-gray-600 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 dark:hover:bg-gray-700"
                   >
                     Add to Cart

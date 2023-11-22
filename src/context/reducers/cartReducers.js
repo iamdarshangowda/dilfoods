@@ -11,7 +11,7 @@ export const cartReducer = (state, action) => {
       return [...state.cart, { ...action.payload, ...action.cartUpdate }];
     }
   };
-
+  console.log(action.payload);
   switch (action?.type) {
     case 'ADD-TO-CART':
       return {

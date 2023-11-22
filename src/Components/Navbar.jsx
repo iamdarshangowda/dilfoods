@@ -1,8 +1,14 @@
+'use client';
 import React from 'react';
 import CartIcon from './icons/cartIcon';
 import Link from 'next/link';
+import { useCartContext } from '../context/cartContext';
 
 const Navbar = () => {
+  const {
+    cartState: { cart },
+  } = useCartContext();
+
   return (
     <nav
       className="fixed top-0 left-0 right-0 z-10 flex justify-between items-center gap-4 px-10 py-2
@@ -14,7 +20,10 @@ const Navbar = () => {
           Dil Foods
         </h1>
       </Link>
-      <Link href="/checkout">
+      <Link href="/checkout" className="relative">
+        <p className="absolute -top-3 -right-6 border-2 bg-grey-1 text-grey-9 font-semibold rounded-full text-center px-2">
+          {cart.length}
+        </p>
         <CartIcon />
       </Link>
     </nav>
