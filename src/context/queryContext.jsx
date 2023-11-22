@@ -1,7 +1,7 @@
 'use client';
 const { createContext, useState, useContext } = require('react');
 
-const QuerContext = createContext();
+const QueryContext = createContext();
 
 export const QueryContextWrapper = ({ children }) => {
   const [searchString, setSearchString] = useState('');
@@ -16,9 +16,9 @@ export const QueryContextWrapper = ({ children }) => {
     categoryId,
     setCategoryId,
   };
-  return <QuerContext.Provider value={value}>{children}</QuerContext.Provider>;
+  return <QueryContext.Provider value={value}>{children}</QueryContext.Provider>;
 };
 
 export const useQueryContext = () => {
-  return useContext(QuerContext);
+  return useContext(QueryContext);
 };

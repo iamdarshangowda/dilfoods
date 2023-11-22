@@ -3,12 +3,20 @@ import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { get } from '../../../config/axiosClient';
 import Loader from '../../../Components/icons/loader';
+import { useCartContext } from '../../../context/cartContext';
 
 const SingleProduct = () => {
   const router = useRouter();
   const pathname = usePathname();
   const [loading, setLoading] = useState(false);
   const [singleProduct, setSingleProduct] = useState({});
+  const [productSpec, setProductSpec] = useState({ size: '', color: '' });
+  const [isAdded, setIsAdded] = useState(false);
+  const {
+    cartState: { cart },
+    cartDispatch,
+  } = useCartContext();
+
   function handleBack() {
     router.back();
   }
@@ -29,6 +37,43 @@ const SingleProduct = () => {
 
     getSingleProduct();
   }, [pathname]);
+
+  useEffect(() => {
+    if (cart.length) {
+      let findProd = cart.findIndex((product) => product.id == singleProduct.id);
+      if (findProd !== -1) {
+        setIsAdded(true);
+      }
+    }
+  }, [cart]);
+
+  function handleAddToCart() {
+    if (!productSpec.color || !productSpec.size) {
+      alert('Please specify color and size');
+      return;
+    }
+
+    cartDispatch({
+      type: 'ADD-TO-CART',
+      payload: singleProduct,
+      cartUpdate: {},
+    });
+  }
+
+  const handleRemovefromCart = () => {
+    cartDispatch({
+      type: 'REMOVE-FROM-CART',
+      payload: singleProduct.id,
+    });
+  };
+
+  function handleProductSpec(e) {
+    const { value, name } = e.target;
+    if (name) {
+      console.log(value);
+      setProductSpec((prev) => ({ ...prev, [name]: value }));
+    }
+  }
 
   if (loading) {
     return (
@@ -66,11 +111,27 @@ const SingleProduct = () => {
               )}
             </div>
             <div className="flex -mx-2 mb-4">
-              <div className="w-full px-2">
-                <button className="w-full bg-gray-900 dark:bg-gray-600 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 dark:hover:bg-gray-700">
-                  Add to Cart
-                </button>
-              </div>
+              {isAdded ? (
+                <div className="w-full px-2">
+                  <button
+                    onClick={handleRemovefromCart}
+                    disabled={isAdded}
+                    className="w-full bg-gray-900 dark:bg-gray-600 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 dark:hover:bg-gray-700"
+                  >
+                    Remove from cart
+                  </button>
+                </div>
+              ) : (
+                <div className="w-full px-2">
+                  <button
+                    onClick={handleAddToCart}
+                    disabled={isAdded}
+                    className="w-full bg-gray-900 dark:bg-gray-600 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 dark:hover:bg-gray-700"
+                  >
+                    Add to Cart
+                  </button>
+                </div>
+              )}
             </div>
           </div>
           <div className="md:flex-1 px-4 text-grey-6">
@@ -90,29 +151,113 @@ const SingleProduct = () => {
             </div>
             <div className="mb-4">
               <span className="font-bold">Select Color:</span>
-              <div className="flex items-center mt-2">
-                <button className="w-6 h-6 rounded-full bg-gray-800 dark:bg-gray-200 mr-2"></button>
-                <button className="w-6 h-6 rounded-full bg-red-500 dark:bg-red-700 mr-2"></button>
-                <button className="w-6 h-6 rounded-full bg-blue-500 dark:bg-blue-700 mr-2"></button>
-                <button className="w-6 h-6 rounded-full bg-yellow-500 dark:bg-yellow-700 mr-2"></button>
+              <div
+                className="flex items-center mt-2 hover:cursor-pointer max-w-max"
+                onClick={handleProductSpec}
+              >
+                <button
+                  className="w-6 h-6 rounded-full bg-gray-800  mr-2"
+                  name="color"
+                  value="bg-gray-800"
+                  style={
+                    productSpec.color === 'bg-gray-800'
+                      ? { border: '3px solid white' }
+                      : null
+                  }
+                ></button>
+                <button
+                  className="w-6 h-6 rounded-full bg-red-500  mr-2"
+                  name="color"
+                  value="bg-red-500"
+                  style={
+                    productSpec.color === 'bg-red-500'
+                      ? { border: '3px solid white' }
+                      : null
+                  }
+                ></button>
+                <button
+                  className="w-6 h-6 rounded-full bg-blue-500  mr-2"
+                  name="color"
+                  value="bg-blue-500"
+                  style={
+                    productSpec.color === 'bg-blue-500'
+                      ? { border: '3px solid white' }
+                      : null
+                  }
+                ></button>
+                <button
+                  className="w-6 h-6 rounded-full bg-yellow-500 mr-2"
+                  name="color"
+                  value="bg-yellow-500"
+                  style={
+                    productSpec.color === 'bg-yellow-500'
+                      ? { border: '3px solid white' }
+                      : null
+                  }
+                ></button>
               </div>
             </div>
             <div className="mb-4">
               <span className="font-bold">Select Size:</span>
-              <div className="flex items-center mt-2">
-                <button className="bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-white py-2 px-4 rounded-full font-bold mr-2 hover:bg-gray-400 dark:hover:bg-gray-600">
+              <div className="flex items-center mt-2" onClick={handleProductSpec}>
+                <button
+                  className="bg-gray-300  text-gray-700  py-2 px-4 rounded-full font-bold mr-2 hover:bg-gray-400 "
+                  name="size"
+                  value="S"
+                  style={
+                    productSpec.size === 'S'
+                      ? { backgroundColor: 'green', color: 'white' }
+                      : null
+                  }
+                >
                   S
                 </button>
-                <button className="bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-white py-2 px-4 rounded-full font-bold mr-2 hover:bg-gray-400 dark:hover:bg-gray-600">
+                <button
+                  className="bg-gray-300  text-gray-700  py-2 px-4 rounded-full font-bold mr-2 hover:bg-gray-400 "
+                  name="size"
+                  value="M"
+                  style={
+                    productSpec.size === 'M'
+                      ? { backgroundColor: 'green', color: 'white' }
+                      : null
+                  }
+                >
                   M
                 </button>
-                <button className="bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-white py-2 px-4 rounded-full font-bold mr-2 hover:bg-gray-400 dark:hover:bg-gray-600">
+                <button
+                  className="bg-gray-300  text-gray-700  py-2 px-4 rounded-full font-bold mr-2 hover:bg-gray-400 "
+                  name="size"
+                  value="L"
+                  style={
+                    productSpec.size === 'L'
+                      ? { backgroundColor: 'green', color: 'white' }
+                      : null
+                  }
+                >
                   L
                 </button>
-                <button className="bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-white py-2 px-4 rounded-full font-bold mr-2 hover:bg-gray-400 dark:hover:bg-gray-600">
+                <button
+                  className="bg-gray-300  text-gray-700  py-2 px-4 rounded-full font-bold mr-2 hover:bg-gray-400 "
+                  name="size"
+                  value="XL"
+                  style={
+                    productSpec.size === 'XL'
+                      ? { backgroundColor: 'green', color: 'white' }
+                      : null
+                  }
+                >
                   XL
                 </button>
-                <button className="bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-white py-2 px-4 rounded-full font-bold mr-2 hover:bg-gray-400 dark:hover:bg-gray-600">
+                <button
+                  className="bg-gray-300  text-gray-700  py-2 px-4 rounded-full font-bold mr-2 hover:bg-gray-400 "
+                  name="size"
+                  value="XXL"
+                  style={
+                    productSpec.size === 'XXL'
+                      ? { backgroundColor: 'green', color: 'white' }
+                      : null
+                  }
+                >
                   XXL
                 </button>
               </div>
