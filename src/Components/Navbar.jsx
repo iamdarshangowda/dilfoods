@@ -3,11 +3,21 @@ import React from 'react';
 import CartIcon from './icons/cartIcon';
 import Link from 'next/link';
 import { useCartContext } from '../context/cartContext';
+import { useRouter } from 'next/navigation';
 
 const Navbar = () => {
+  const router = useRouter();
   const {
     cartState: { cart },
   } = useCartContext();
+
+  function handleCart() {
+    if (!cart.length) {
+      alert('Cart is empty.');
+      return;
+    }
+    router.push('/checkout');
+  }
 
   return (
     <nav
@@ -20,12 +30,12 @@ const Navbar = () => {
           Dil Foods
         </h1>
       </Link>
-      <Link href="/checkout" className="relative">
+      <button onClick={handleCart} className="relative">
         <p className="absolute -top-3 -right-6 border-2 bg-grey-1 text-grey-9 font-semibold rounded-full text-center px-2">
           {cart.length}
         </p>
         <CartIcon />
-      </Link>
+      </button>
     </nav>
   );
 };
