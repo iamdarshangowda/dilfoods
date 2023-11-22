@@ -1,15 +1,47 @@
 'use client';
-import { useRouter } from 'next/navigation';
-import React from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { get } from '../../../config/axiosClient';
+import Loader from '../../../Components/icons/loader';
 
 const SingleProduct = () => {
   const router = useRouter();
+  const pathname = usePathname();
+  const [loading, setLoading] = useState(false);
+  const [singleProduct, setSingleProduct] = useState({});
   function handleBack() {
     router.back();
   }
 
+  useEffect(() => {
+    async function getSingleProduct() {
+      try {
+        setLoading(true);
+        const response = await get(pathname);
+        setSingleProduct(response.data);
+      } catch (error) {
+        console.log(error);
+        alert('Something went wrong');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    getSingleProduct();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <div className="w-20 h-20">
+          <Loader />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-6" onClick={handleBack}>
           <button className="max-w-sm bg-gray-900 dark:bg-gray-600 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 dark:hover:bg-gray-700">
@@ -19,11 +51,19 @@ const SingleProduct = () => {
         <div className="flex flex-col md:flex-row -mx-4">
           <div className="md:flex-1 px-4">
             <div className="h-[460px] rounded-lg bg-gray-300 dark:bg-gray-700 mb-4">
-              <img
-                className="w-full h-full object-cover rounded-lg"
-                src="https://cdn.pixabay.com/photo/2020/05/22/17/53/mockup-5206355_960_720.jpg"
-                alt="Product Image"
-              />
+              {singleProduct.images?.length ? (
+                <img
+                  className="w-full h-full object-cover rounded-lg"
+                  src={singleProduct.images[0]}
+                  alt="Product Image"
+                />
+              ) : (
+                <img
+                  className="w-full h-full object-cover rounded-lg"
+                  src="/dil.png"
+                  alt="Product Image"
+                />
+              )}
             </div>
             <div className="flex -mx-2 mb-4">
               <div className="w-1/2 px-2">
@@ -39,15 +79,14 @@ const SingleProduct = () => {
             </div>
           </div>
           <div className="md:flex-1 px-4 text-grey-6">
-            <h2 className="text-2xl font-boldmb-2">Product Name</h2>
+            <h2 className="text-2xl font-boldmb-2">{singleProduct.title}</h2>
             <p className="text-grey-7 text-sm mb-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed ante justo.
-              Integer euismod libero id mauris malesuada tincidunt.
+              {singleProduct.description?.substring(0, 100) + '...'}
             </p>
             <div className="flex mb-4">
               <div className="mr-4">
                 <span className="font-bold">Price:</span>
-                <span> $29.99</span>
+                <span> &#8377;{singleProduct.price}</span>
               </div>
               <div>
                 <span className="font-bold">Availability:</span>
@@ -85,15 +124,7 @@ const SingleProduct = () => {
             </div>
             <div>
               <span className="font-bold">Product Description:</span>
-              <p className="text-grey-7 text-sm mt-2">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed ante
-                justo. Integer euismod libero id mauris malesuada tincidunt. Vivamus
-                commodo nulla ut lorem rhoncus aliquet. Duis dapibus augue vel ipsum
-                pretium, et venenatis sem blandit. Quisque ut erat vitae nisi ultrices
-                placerat non eget velit. Integer ornare mi sed ipsum lacinia, non sagittis
-                mauris blandit. Morbi fermentum libero vel nisl suscipit, nec tincidunt mi
-                consectetur.
-              </p>
+              <p className="text-grey-7 text-sm mt-2">{singleProduct.description}</p>
             </div>
           </div>
         </div>

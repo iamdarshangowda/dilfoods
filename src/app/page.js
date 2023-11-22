@@ -17,7 +17,7 @@ export default function Home() {
     try {
       setLoading(true);
       const response = await get(
-        `products?offset=${currentPage}&limit=${10}&price_min=${
+        `/products?offset=${currentPage}&limit=${10}&price_min=${
           priceRange.min
         }&price_max=${priceRange.max}&title=${searchString}&categoryId=${categoryId}`
       );
@@ -55,7 +55,7 @@ export default function Home() {
               .fill('')
               .map((products, index) => <ItemCardSkeleton key={index} />)
           : products.map((product, index) => (
-              <Link href="/product/1" key={product.id}>
+              <Link href={`products/${product.id}`} key={product.id}>
                 <ItemCard product={product} />
               </Link>
             ))}
