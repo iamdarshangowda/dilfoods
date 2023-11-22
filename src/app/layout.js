@@ -1,6 +1,7 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
 import Navbar from '../Components/Navbar';
+import { QueryContextWrapper } from '../context/queryContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -14,7 +15,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <Navbar />
-        <div className="mt-14">{children}</div>
+        <QueryContextWrapper>
+          <div className="mt-14">{children}</div>
+        </QueryContextWrapper>
       </body>
     </html>
   );
