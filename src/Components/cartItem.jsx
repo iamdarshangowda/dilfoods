@@ -1,7 +1,6 @@
 import React from 'react';
 
-const CartItem = ({ item }) => {
-  console.log(item);
+const CartItem = ({ item, callback }) => {
   return (
     <div className="flex flex-col rounded-lg bg-white sm:flex-row">
       <img
@@ -14,6 +13,12 @@ const CartItem = ({ item }) => {
         <span className="float-right text-gray-400">Size: {item.size}</span>
         <p className="text-lg font-bold">&#8377;{item.price}</p>
       </div>
+      <button
+        className="text-grey-8 font-semibold h-8 p-2 border-2 flex items-center rounded-md"
+        onClick={callback}
+      >
+        Remove
+      </button>
     </div>
   );
 };

@@ -12,7 +12,7 @@ const ItemCard = ({ product }) => {
   }, [product]);
 
   return (
-    <div className="relative flex w-72 lg:w-80 flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
+    <div className="relative flex w-80 flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
       <div className="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl" href="#">
         <img
           className="object-cover w-full"

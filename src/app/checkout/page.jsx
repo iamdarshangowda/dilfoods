@@ -16,7 +16,7 @@ const Checkout = () => {
   useEffect(() => {
     const totalPrice = cart.reduce((acc, item) => acc + Number(item.price), 0);
     setTotal(totalPrice);
-  }, cart);
+  }, [cart]);
 
   function handleForm(e) {
     const { name, value } = e.target;
@@ -37,6 +37,13 @@ const Checkout = () => {
     router.push('/');
   }
 
+  function handleRemoveItem(product) {
+    cartDispatch({
+      type: 'REMOVE-FROM-CART',
+      payload: product,
+    });
+  }
+
   return (
     <div className="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32 mt-10 gap-6 min-h-screen">
       <div className="pt-8">
@@ -46,7 +53,13 @@ const Checkout = () => {
         </p>
         <div className="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
           {cart.length
-            ? cart.map((item) => <CartItem key={item.id} item={item} />)
+            ? cart.map((item) => (
+                <CartItem
+                  key={item.id}
+                  item={item}
+                  callback={() => handleRemoveItem(item)}
+                />
+              ))
             : 'No Items Added'}
         </div>
       </div>
